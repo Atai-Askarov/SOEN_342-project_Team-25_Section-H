@@ -3,6 +3,7 @@ import java.util.ArrayList;
 
 import DateTime.Schedule;
 import DateTime.Time;
+import DateTime.Date;
 
 public class Instructor {
     private String name;
@@ -89,7 +90,9 @@ public class Instructor {
                ", and who resides in " + cityString.toString() + ".";
     }
     public static void main(String[] args) {
-        Schedule one = new Schedule("09.01.2024", "11.01.2024", "Monday", new Time(5,30), new Time(7,30));
+        Date start = new Date(9,1,2024);
+        Date end = new Date(11,1,2024)
+        Schedule one = new Schedule(start, end, "Monday", new Time(5,30), new Time(7,30));
         Instructor dima = new Instructor("Dima", 438, "plumber", one, "Montreal");
         System.out.println(dima);
     }
