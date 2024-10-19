@@ -30,7 +30,7 @@ public class Instructor {
         this.specialization.add(specialization);
         this.availability = availability;
         this.city = new ArrayList<>();
-        this.city.add(specialization);
+        this.city.add(city);
     }
     
     public String getName() {
@@ -82,7 +82,7 @@ public class Instructor {
                 cityString.append(", "); // Add comma except for the last element
             }
         }
-
+        
         // Creating the final output
         return name + ", whose phone number is " + phone_number +
                ", specializes in " + specializationString.toString() +
@@ -91,9 +91,9 @@ public class Instructor {
     }
     public static void main(String[] args) {
         Date start = new Date(9,1,2024);
-        Date end = new Date(11,1,2024)
+        Date end = new Date(11,1,2024);
         Schedule one = new Schedule(start, end, "Monday", new Time(5,30), new Time(7,30));
-        Instructor dima = new Instructor("Dima", 438, "plumber", one, "Montreal");
+        Instructor dima = new Instructor("Dima", 1111111, "plumbing", one, "Montreal");
         System.out.println(dima);
     }
 }
