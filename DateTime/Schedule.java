@@ -3,13 +3,33 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class Schedule {
-    private List<String> startDate;
-    private List<String> endDate;
+    private List<Date> startDate;
+    private List<Date> endDate;
     private int[] daysWeek;
     private List<Time> startTime;
     private List<Time> endTime;
 
-    public Schedule(String startDate, String endDate, String day, Time startTime, Time endTime) {
+    
+    //season: startdate - enddate
+    //timeslot: starttime - endtime
+    //daysweek: array of 7 integers that show how many timeslots are there in a day
+
+    public Schedule(List<Date> startDate, List<Date> endDate, String day , Time startTime,
+            Time endTime) {
+        this.startDate = startDate; // if there are multiple seasons, it will recieve an array of date
+        this.endDate = endDate; //we'll have 2 seasons during which all the rest will apply: days of the weel and timeslots
+
+        this.daysWeek = new int[7]; 
+        setDaysWeek(day);
+        
+        this.startTime = new ArrayList<>();
+        this.startTime.add(startTime);
+        
+        this.endTime = new ArrayList<>();
+        this.endTime.add(endTime);
+    }
+
+    public Schedule(Date startDate, Date endDate, String day, Time startTime, Time endTime) {
         this.startDate = new ArrayList<>();
         this.startDate.add(startDate);
         
@@ -24,26 +44,40 @@ public class Schedule {
         
         this.endTime = new ArrayList<>();
         this.endTime.add(endTime);
-        System.out.println(daysWeek.length);
+        
     }
 
-    public List<String> getstartDate() {
+    public void setSeason(Date start, Date end){
+        setstartDate(start);
+        setendDate(end);
+    }
+    public String printSeasons(){
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < startDate.size(); i++){
+            sb.append(startDate.get(i).toString()) // Assuming single start date
+            .append(" until ")
+            .append(endDate.get(i).toString()) // Assuming single end date
+            .append("\n");
+        }
+        return sb.toString();
+    }
+    public List<Date> getstartDate() {
         return startDate;
     }
 
 
-    public void setstartDate(List<String> startDate) {
-        this.startDate = startDate;
+    public void setstartDate(Date startDate) {
+        this.startDate.add(startDate);
     }
 
 
-    public List<String> getendDate() {
+    public List<Date> getendDate() {
         return endDate;
     }
 
 
-    public void setendDate(List<String> endDate) {
-        this.endDate = endDate;
+    public void setendDate(Date endDate) {
+        this.endDate.add(endDate);
     }
 
 
@@ -100,45 +134,58 @@ public class Schedule {
         StringBuilder sb = new StringBuilder();
         sb.append("The availabilities are:\n");
 
-        for (int i = 0; i < daysWeek.length; i++) {
-            if (daysWeek[i] > 0) { // Check if the day has any availability
-                String dayName = getDayName(i);
-                sb.append(dayName)
-                  .append(": from ")
-                  .append(startTime.toString()) // Assumes Time is properly formatted
-                  .append(" to ")
-                  .append(endTime.toString())
-                  .append(", starting from ")
-                  .append(startDate) // Assuming single start date
-                  .append(" until ")
-                  .append(endDate) // Assuming single end date
-                  .append("\n");
+        for (int i = 0; i < startDate.size(); i++) {
+            sb.append("starting from ")
+            .append(startDate.get(i)) // Assuming single start date
+            .append(" until ")
+            .append(endDate.get(i)) // Assuming single end date
+            .append("\n");}
+
+            for(int j = 0; j < daysWeek.length; j++){
+                if (daysWeek[j] > 0) { // Check if the day has any availability
+                    String dayName = getDayName(j);
+                    sb.append(dayName) 
+                      .append(": from ")
+                      .append(startTime.get(0).toString()) // Assumes Time is properly formatted
+                      .append(" to ")
+                      .append(endTime.get(0).toString())
+                      .append("\n");
+                    
+                      
+                }
             }
-        }
+
+            
+        
 
         return sb.toString();
     }
 
-private String getDayName(int index) {
-    switch (index) {
-        case 0: return "Monday";
-        case 1: return "Tuesday";
-        case 2: return "Wednesday";
-        case 3: return "Thursday";
-        case 4: return "Friday";
-        case 5: return "Saturday";
-        case 6: return "Sunday";
-        default: return "Unknown Day";
+    private String getDayName(int index) {
+        switch (index) {
+            case 0: return "Monday";
+            case 1: return "Tuesday";
+            case 2: return "Wednesday";
+            case 3: return "Thursday";
+            case 4: return "Friday";
+            case 5: return "Saturday";
+            case 6: return "Sunday";
+            default: return "Unknown Day";
+        }
     }
-}
 
-    public static void main(String[] args) {
-        Schedule one = new Schedule("09.01.2024", "11.01.2024", "Monday", new Time(5,30), new Time(7,30));
-        one.setDaysWeek("Thursday");
-
-        System.out.println(one);
-    }
     
 
+    public static void main(String[] args) {
+        Date start = new Date(9,1,2024);
+        Date end = new Date(11,1,2024);
+        Date start1 = new Date(6,1,2024);
+        Date end1 = new Date(7,1,2024);
+        Schedule one = new Schedule(start, end, "Monday", new Time(5,30), new Time(7,30));
+        one.setDaysWeek("Thursday");
+        one.setSeason(start1, end1);
+        
+        System.out.println(one);
+    }
     
 }
