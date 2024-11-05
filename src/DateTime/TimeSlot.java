@@ -6,47 +6,58 @@ public class TimeSlot implements Comparable<TimeSlot>{
     private LocalTime end; 
     private String activity;
 
-    public TimeSlot(LocalTime start, LocalTime end) {
-        this.start = start;
-        this.end = end;
+
+    public TimeSlot(LocalTime value, Boolean openHours){
+        // this lets set the opening/ closing hours for provided by the schedule class
+        if (openHours)
+            this.start = value;
+        else
+            this.end = value;
     }
 
-    public TimeSlot(LocalTime start, LocalTime end, String activity) throws InnaccurateDatePlacement{
+    public TimeSlot(LocalTime start, LocalTime end) throws InnaccurateTimePlacement{
+        this.start = start;
+        this.end = end;
+        if(start.isAfter(end))
+            throw new InnaccurateTimePlacement();
+    }
+
+    public TimeSlot(LocalTime start, LocalTime end, String activity) throws InnaccurateTimePlacement{
         this.start = start;
         this.end = end;
         this.activity = activity;
         if(start.isAfter(end))
-            throw new InnaccurateDatePlacement();
+            throw new InnaccurateTimePlacement();
     }
 
-    public class InnaccurateDatePlacement extends Exception {
-        public InnaccurateDatePlacement(String message) {
+    public class InnaccurateTimePlacement extends Exception {
+        public InnaccurateTimePlacement(String message) {
             super(message);
         }
-        public InnaccurateDatePlacement(){
-            super("the Start date must be before the end date");
+        public InnaccurateTimePlacement(){
+            super("the Start time must be before the end time");
         }
     }
 
     public LocalTime getStart() {
         return start;
     }
-    public void setStart(LocalTime start) throws InnaccurateDatePlacement {
+    public void setStart(LocalTime start) throws InnaccurateTimePlacement {
         this.start = start;
         if (this.end != null){
             if (start.isAfter(this.end)){
-                throw new InnaccurateDatePlacement();
+                throw new InnaccurateTimePlacement();
             }
         }
     }
     public LocalTime getEnd() {
         return end;
     }
-    public void setEnd(LocalTime end) throws InnaccurateDatePlacement {
+    public void setEnd(LocalTime end) throws InnaccurateTimePlacement {
         this.end = end;
         if (this.start != null){
             if (end.isBefore(this.start)){
-                throw new InnaccurateDatePlacement();
+                throw new InnaccurateTimePlacement();
             }
         }
     }

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.time.LocalTime; 
 import DateTime.TimeSlot;
+import DateTime.TimeSlot.InnaccurateTimePlacement;
 
 public class Season {
     private LocalDate startDate;
@@ -62,17 +63,6 @@ public class Season {
             System.out.println("The interval length isn't 2, so can't do notin");
 
         return false;
-    }
-
-
-
-    private Boolean isAccuratelyPlacedDate(LocalDate startDate, LocalDate endDate){
-        if (startDate.isBefore(endDate)){
-            return true;
-        }
-        else {
-        return false;
-    }
     }
 
     static String mapDigitToDay(int digit) {
@@ -192,7 +182,13 @@ public class Season {
         return interval;
     }
 
+    void setBoundaries(LocalTime openHours, LocalTime closeHours){
+        for (int i = 0; i < daysWeek.size(); i ++){
+            daysWeek.get(i).add(0,new TimeSlot(openHours, true));
+            daysWeek.get(i).add(new TimeSlot(closeHours, false));
+        }
 
+    }
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -260,15 +256,25 @@ public class Season {
         LocalTime endTime1 = LocalTime.of(15, 50);
         LocalTime startTime2 = LocalTime.of(14,50);
         LocalTime endTime2 = LocalTime.of(15,30);
-        TimeSlot one = new TimeSlot(startTime1, endTime1);
-        TimeSlot two = new TimeSlot(startTime, endTime);
-        TimeSlot three = new TimeSlot(startTime2, endTime2);
+        TimeSlot one;
+        TimeSlot two;
+        TimeSlot three;
+        try{
+            one = new TimeSlot(startTime1, endTime1);
+            two = new TimeSlot(startTime, endTime);
+            three = new TimeSlot(startTime2, endTime2);
+            Season summerSeason = new Season(startDate, endDate, "Monday", one);
+            summerSeason.setTimeSlot(two, "Tuesday");
+            summerSeason.setTimeSlot(two, "Monday");
+            summerSeason.setTimeSlot(three, "Monday");
+            System.out.println(summerSeason);
+        
+        }
+        catch(InnaccurateTimePlacement e){
+                System.out.println(e.getMessage());
+            }
 
-        Season summerSeason = new Season(startDate, endDate, "Monday", one);
-        summerSeason.setTimeSlot(two, "Tuesday");
-        summerSeason.setTimeSlot(two, "Monday");
-        summerSeason.setTimeSlot(three, "Monday");
-        System.out.println(summerSeason);
+        
     }
     
 }
