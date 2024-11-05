@@ -1,131 +1,78 @@
-package src.DateTime;
+package DateTime;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-import java.time.LocalTime;
+import java.time.LocalTime; 
+import DateTime.TimeSlot;
 
 public class Season {
     private LocalDate startDate;
     private LocalDate endDate;
-    private int[] daysWeek = new int[7];
-    private List<LocalTime> startTime;
-    private List<LocalTime> endTime;
+    List<List<TimeSlot>> daysWeek = new ArrayList<>(7);
+    HashMap<String, List<TimeSlot>> map = new HashMap<>();
 
-    public Season() {
-        this.startDate = null;
-        this.endDate = null;
-        this.daysWeek = null;
-        this.startTime = null;
-        this.endDate = null;
+
+    public Season(){
+        for (int i = 0; i < 7; i ++){
+            daysWeek.add(i, new ArrayList<>());
+        }
     }
 
-    public Season(LocalDate startDate, LocalDate endDate, String day, LocalTime startTime,
-            LocalTime endTime) {
-
+    public Season(LocalDate startDate, LocalDate endDate, String day, TimeSlot timeslot) {
+       
+        this.startDate = startDate;
+        this.endDate = endDate;
+        for (int i = 0; i < 7; i ++){
+            daysWeek.add(i, new ArrayList<>());
+        }
         int digit = mapDayToDigit(day);
-        daysWeek[digit] += 1;
+        daysWeek.get(digit).add(timeslot);
+        
+        
+    }
 
+    public Season(LocalDate startDate, LocalDate endDate){
         this.startDate = startDate;
         this.endDate = endDate;
-        this.startTime = new ArrayList<LocalTime>();
-        setStartTime(startTime);
-        this.endTime = new ArrayList<LocalTime>();
-        setEndTime(endTime);
+        
+        for (int i = 0; i < 7; i ++){
+            daysWeek.add(i, new ArrayList<>());
+        }    
     }
 
-    public Season(LocalDate startDate, LocalDate endDate) {
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.startTime = new ArrayList<LocalTime>();
-        this.endTime = new ArrayList<LocalTime>();
-        this.daysWeek = new int[7];
-    }
 
-    public Season(LocalDate startDate, LocalDate endDate, int[] daysWeek, List<LocalTime> startTime,
-            List<LocalTime> endTime) throws MatchStartEndTimes, InnaccurateDatePlacement {
-        if (startTime.size() != endTime.size()) {
-            throw new MatchStartEndTimes();
-        }
-        if (isAccuratelyPlacedDate(startDate, endDate)) {
-            this.startDate = startDate;
-            this.endDate = endDate;
-            this.daysWeek = daysWeek;
-            this.startTime = startTime;
-            this.endTime = endTime;
-        } else {
-            throw new InnaccurateDatePlacement();
-        }
-    }
-
-    public Season(LocalDate startDate, LocalDate endDate, String[] daysWeek, LocalTime startTime,
-            LocalTime endTime) {
-        for (int i = 0; i < daysWeek.length; i++) {
-            int digit = mapDayToDigit(daysWeek[i]);
-            daysWeek[digit] += 1;
-        }
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.startTime = new ArrayList<LocalTime>();
-        setStartTime(startTime);
-        this.endTime = new ArrayList<LocalTime>();
-        setEndTime(endTime);
-    }
-
-    public Boolean isWithinDateInterval(LocalDate[] other) {
+    
+    public Boolean isWithinDateInterval(LocalDate[] other){
         // is the passed date interval within the current object's interval?
-        if (other.length == 2) {
-            LocalDate[] this_interval = getDateInterval();
-            LocalDate this_startDate = this_interval[0];
-            LocalDate this_endDate = this_interval[1];
-            LocalDate other_startDate = other[0];
-            LocalDate other_endDate = other[1];
-            System.out.println("The interval is within range");
-            return (other_startDate.isEqual(this_startDate) || other_startDate.isAfter(this_startDate)) &&
-                    (other_endDate.isEqual(this_endDate) || other_endDate.isBefore(this_endDate));
-        }
+        if(other.length == 2){
+                LocalDate[] this_interval = getDateInterval();
+                LocalDate this_startDate = this_interval[0];
+                LocalDate this_endDate = this_interval[1];
+                LocalDate other_startDate = other[0];
+                LocalDate other_endDate = other[1];
+                System.out.println("The interval is within range");
+                return (other_startDate.isEqual(this_startDate) || other_startDate.isAfter(this_startDate)) &&
+                (other_endDate.isEqual(this_endDate) || other_endDate.isBefore(this_endDate));
+            }
 
-        else
+        else 
             System.out.println("The interval length isn't 2, so can't do notin");
 
         return false;
     }
 
-    public class MatchStartEndTimes extends Exception {
 
-        // Default constructor
-        public MatchStartEndTimes() {
-            super("Make sure you submit both start and end times.");
-        }
 
-        // Constructor that accepts a custom message
-        public MatchStartEndTimes(String message) {
-            super(message);
-        }
-
-        // Constructor that accepts a message and a cause
-        public MatchStartEndTimes(String message, Throwable cause) {
-            super(message, cause);
-        }
-    }
-
-    public class InnaccurateDatePlacement extends Exception {
-        public InnaccurateDatePlacement(String message) {
-            super(message);
-        }
-
-        public InnaccurateDatePlacement() {
-            super("the Start date must be before the end date");
-        }
-    }
-
-    private Boolean isAccuratelyPlacedDate(LocalDate startDate, LocalDate endDate) {
-        if (startDate.isBefore(endDate)) {
+    private Boolean isAccuratelyPlacedDate(LocalDate startDate, LocalDate endDate){
+        if (startDate.isBefore(endDate)){
             return true;
-        } else {
-            return false;
         }
+        else {
+        return false;
+    }
     }
 
     static String mapDigitToDay(int digit) {
@@ -157,7 +104,7 @@ public class Season {
         }
         return day;
     }
-
+    
     static int mapDayToDigit(String day) {
         int digit;
         switch (day.toLowerCase()) {
@@ -185,18 +132,36 @@ public class Season {
             default:
                 throw new IllegalArgumentException("Invalid day: " + day);
         }
-        return digit;
-    }
+        return digit;}
 
-    public void setNewTimeSlot(LocalTime start, LocalTime end, String dayWeek) {
-        if (!startTime.contains(start) && !endTime.contains(end)) {
-            this.startTime.add(start);
-            this.endTime.add(end);
+    public void setTimeSlot(TimeSlot thisTimeSlot, String dayWeek){
+        int day_position = mapDayToDigit(dayWeek);
+        List<TimeSlot> dayTimeslots = daysWeek.get(day_position);
+        if(dayTimeslots.size() == 0){
+            dayTimeslots.add(thisTimeSlot);
         }
-        this.daysWeek[mapDayToDigit(dayWeek)] += 1;
-    }
 
-    public LocalDate getStartDate() {
+        for (int i = 0; i < dayTimeslots.size(); i++){
+            TimeSlot otherTimeSlot = dayTimeslots.get(i);
+            if (thisTimeSlot.isWithinTimeSlot(otherTimeSlot)){
+                int position_indicator = thisTimeSlot.compareTo(otherTimeSlot);
+                if(position_indicator == -1) // add before the other timeslot
+                    if (i == 0){
+                        dayTimeslots.add(0, thisTimeSlot);
+                        break;
+                    }
+                    else{
+                        dayTimeslots.add(i-1, thisTimeSlot);
+                        break;}
+                else if(position_indicator == 1){ // add after the other timeslot
+                    dayTimeslots.add(i + 1,thisTimeSlot);
+                    break;}
+                if (position_indicator == 0) // an overlap exists, so can't add this timeSlot
+                    System.out.println("Overlap, so naynay. Most likely smth is wrong, there is another check for that");
+            }
+    }}
+
+    private LocalDate getStartDate() {
         return startDate;
     }
 
@@ -204,7 +169,7 @@ public class Season {
         this.startDate = startDate;
     }
 
-    public LocalDate getEndDate() {
+    private LocalDate getEndDate() {
         return endDate;
     }
 
@@ -212,136 +177,100 @@ public class Season {
         this.endDate = endDate;
     }
 
-    public int[] getDaysWeek() {
-        return daysWeek;
+
+    public List <TimeSlot> getTimeSlotIntervalsByDay (String day){
+        int digit = mapDayToDigit(day);
+        return daysWeek.get(digit);
     }
 
-    public void setDaysWeek(int[] daysWeek) {
-        this.daysWeek = daysWeek;
-    }
+    //public List<TimeSlot> getTimeSlotIntervalsByActivity(String activity){
 
-    public void addDaysWeek(String day) {
-        this.daysWeek[mapDayToDigit(day)] += 1;
-    }
+    //}
 
-    public List<LocalTime> getStartTime() {
-        return startTime;
-    }
-
-    private void setStartTime(LocalTime startTime) {
-        this.startTime.add(startTime);
-    }
-
-    public List<LocalTime> getEndTime() {
-        return endTime;
-    }
-
-    private void setEndTime(LocalTime endTime) {
-        this.endTime.add(endTime);
-    }
-
-    public void setTimeSlotInterval(LocalTime start, LocalTime end) {
-
-        setStartTime(start);
-        setEndTime(end);
-    }
-
-    public List<LocalTime[]> getTimeSlotIntervals() {
-        List<LocalTime> starts = getStartTime();
-        List<LocalTime> ends = getEndTime();
-        List<LocalTime[]> result = new ArrayList<LocalTime[]>();
-        for (int i = 0; i < starts.size(); i++) {
-            LocalTime[] pair = { starts.get(i), ends.get(i) };
-            result.add(pair);
-        }
-        return result;
-    }
-
-    public LocalDate[] getDateInterval() {
-        LocalDate[] interval = { getStartDate(), getEndDate() };
+    public LocalDate[] getDateInterval(){
+        LocalDate[] interval = {getStartDate(), getEndDate()};
         return interval;
     }
 
-    public boolean equals(Object obj) {
-        // Check if the object is compared with itself
-        if (this == obj) {
-            return true;
-        }
-
-        // Check if the object is an instance of YourClass
-        if (!(obj instanceof Season)) {
-            return false;
-        }
-
-        // Cast the object to YourClass
-        Season other = (Season) obj;
-
-        // Compare startDate
-        if (startDate != null ? !startDate.equals(other.startDate) : other.startDate != null) {
-            return false;
-        }
-
-        // Compare endDate
-        if (endDate != null ? !endDate.equals(other.endDate) : other.endDate != null) {
-            return false;
-        }
-
-        // Compare daysWeek
-        if (!Arrays.equals(daysWeek, other.daysWeek)) {
-            return false;
-        }
-
-        // Compare startTime
-        if (startTime != null ? !startTime.equals(other.startTime) : other.startTime != null) {
-            return false;
-        }
-
-        // Compare endTime
-        return endTime != null ? endTime.equals(other.endTime) : other.endTime == null;
-    }
 
     @Override
     public int hashCode() {
-        int result = (startDate != null ? startDate.hashCode() : 0);
-        result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
-        result = 31 * result + Arrays.hashCode(daysWeek);
-        result = 31 * result + (startTime != null ? startTime.hashCode() : 0);
-        result = 31 * result + (endTime != null ? endTime.hashCode() : 0);
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((startDate == null) ? 0 : startDate.hashCode());
+        result = prime * result + ((endDate == null) ? 0 : endDate.hashCode());
+        result = prime * result + ((daysWeek == null) ? 0 : daysWeek.hashCode());
         return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Season other = (Season) obj;
+        if (startDate == null) {
+            if (other.startDate != null)
+                return false;
+        } else if (!startDate.equals(other.startDate))
+            return false;
+        if (endDate == null) {
+            if (other.endDate != null)
+                return false;
+        } else if (!endDate.equals(other.endDate))
+            return false;
+        if (daysWeek == null) {
+            if (other.daysWeek != null)
+                return false;
+        } else if (!daysWeek.equals(other.daysWeek))
+            return false;
+        return true;
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(
-                "From " + startDate + " until " + endDate + " the availabilities are as follows \n");
-        for (int i = 0; i < daysWeek.length; i++) {
-            int timeslots_per_day = daysWeek[i];
-
-            if (timeslots_per_day > 0) {
-                sb.append(mapDigitToDay(i) + ": \n");
-                for (int j = 0; j < timeslots_per_day; j++) {
-                    sb.append(startTime.get(j) + " - " + endTime.get(j) + "\n");
+        StringBuilder sb = new StringBuilder("This season lasts from ");
+        sb.append(startDate.toString() + " until " + endDate.toString() + "\n");
+        sb.append("The timeslots are as follows \n");
+        for (int i = 0; i < daysWeek.size(); i ++){
+            String day = mapDigitToDay(i);
+            List<TimeSlot> dayList = daysWeek.get(i);
+            if (!daysWeek.get(i).isEmpty()){
+                sb.append(day + ": \n");
+                for (int j = 0; j < dayList.size(); j++){
+                    TimeSlot period = dayList.get(j);
+                    sb.append(period.getStart() + " - " + period.getEnd() + "\n");
                 }
+                
             }
-
         }
-        return sb.toString();
-    }
 
-    public static void main(String[] args) {
-        LocalDate starDate = LocalDate.of(2024, 06, 05);
+        return sb.toString();}
+    
+
+    public static void main(String[] args){
+        LocalDate startDate = LocalDate.of(2024,06,05);
         LocalDate endDate = LocalDate.of(2024, 06, 30);
-        LocalTime startTime = LocalTime.of(12, 34);
+        LocalTime startTime = LocalTime.of(12,34);
         LocalTime endTime = LocalTime.of(14, 50);
-        LocalTime startTime1 = LocalTime.of(14, 50);
+        LocalTime startTime1 = LocalTime.of(14,50);
         LocalTime endTime1 = LocalTime.of(15, 50);
-        Season summer_availabilites = new Season(starDate, endDate, "Monday", startTime, endTime);
-        Season summer_availabilites1 = new Season(starDate, endDate, "Monday", startTime, endTime);
-        System.out.println(summer_availabilites.equals(summer_availabilites1));
-        summer_availabilites.addDaysWeek("Tuesday");
-        summer_availabilites.setNewTimeSlot(startTime1, endTime1, "Tuesday");
-        summer_availabilites.setNewTimeSlot(startTime1, endTime1, "Thursday");
-        System.out.println(summer_availabilites);
-    }
+        LocalTime startTime2 = LocalTime.of(14,50);
+        LocalTime endTime2 = LocalTime.of(15,30);
+        TimeSlot one = new TimeSlot(startTime1, endTime1);
+        TimeSlot two = new TimeSlot(startTime, endTime);
+        TimeSlot three = new TimeSlot(startTime2, endTime2);
 
+        Season summerSeason = new Season(startDate, endDate, "Monday", one);
+        summerSeason.setTimeSlot(two, "Tuesday");
+        summerSeason.setTimeSlot(two, "Monday");
+        summerSeason.setTimeSlot(three, "Monday");
+        System.out.println(summerSeason);
+    }
+    
 }
+    
+
