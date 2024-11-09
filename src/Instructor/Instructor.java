@@ -1,10 +1,14 @@
-package src.Instructor;
+package Instructor;
 
 import java.util.ArrayList;
 
-import src.DateTime.Date;
-import src.DateTime.Schedule;
-import src.DateTime.Time;
+import DateTime.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.time.LocalTime;
 
 public class Instructor {
     private String name;
@@ -100,10 +104,12 @@ public class Instructor {
     }
 
     public static void main(String[] args) {
-        Date start = new Date(9, 1, 2024);
-        Date end = new Date(11, 1, 2024);
-        Schedule one = new Schedule(start, end, "Monday", new Time(5, 30), new Time(7, 30));
-        Instructor dima = new Instructor("Dima", 1111111, "plumbing", one, "Montreal");
-        System.out.println(dima);
+        LocalDate start = LocalDate.of(2024, 1, 9);
+        LocalDate end = LocalDate.of(2024, 1, 11);
+        // Schedule one = new Schedule(start, end, "Monday", new LocalTime(5, 30), new
+        // LocalTime(7, 30));
+        // Instructor dima = new Instructor("Dima", 1111111, "plumbing", one,
+        // "Montreal");
+        // System.out.println(dima);
     }
 }
