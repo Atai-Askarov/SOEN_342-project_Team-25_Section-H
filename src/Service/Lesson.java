@@ -1,4 +1,4 @@
-package src.Service;
+package Service;
 
 public class Lesson {
 
