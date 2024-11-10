@@ -1,7 +1,6 @@
 package Admin;
 
 import DateTime.*;
-import Instructor.*;
 import Location.*;
 import Service.*;
 import java.time.LocalTime;
@@ -16,4 +15,10 @@ public class Admin {
 
     }
 
+    public static void main(String[] args) {
+        Admin admin = new Admin();
+        Offering off = new Offering();
+
+        admin.CreateOffering(off);
+    }
 }
