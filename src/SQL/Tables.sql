@@ -103,6 +103,7 @@ create table booking(
 	booking_id SERIAL PRIMARY KEY, 
 	offering_id INT,
 	client_id INT,
+	is_available BOOLEAN DEFAULT TRUE,
 	foreign key(offering_id) references offering(offering_id),
 	FOREIGN KEY(client_id) references client(client_id)
 );
