@@ -19,13 +19,14 @@ import lombok.Setter;
 public class InstructorIdentity {
     @Id 
     @Column(name = "instructor_id") private int instructor_id;
+    @Column(name = "phone_number", nullable = false, unique = true) private String phone_number;
     @Column(name = "first_name") private String first_name;
     @Column(name = "last_name") private String last_name;
-    @Column(name = "phone_number", nullable = false, unique = true) private String phone_number;
-    @Column(name = "specialization") private String specialization;
     @Column(name = "city_name") private String city;
+    @Column(name = "specialization_name") private String specialization;
     @Column(name = "schedule_id", nullable = false, unique = true) private int schedule_id;
     @Column(name = "season_id", nullable = false) private int season_id;
+    @Column(name = "password", nullable = false) private String password;
     
 }
 
