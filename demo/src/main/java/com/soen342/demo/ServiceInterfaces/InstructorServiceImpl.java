@@ -1,5 +1,9 @@
 package com.soen342.demo.ServiceInterfaces;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.soen342.demo.MapperClasses.InstructorMapper;
@@ -12,6 +16,7 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor
 public class InstructorServiceImpl implements InstructorService{
+    @Autowired
     private InstructorRepository instructorRepository;
 
     public InstructorDto createInstructor(InstructorDto instructorDto){
@@ -29,5 +34,33 @@ public class InstructorServiceImpl implements InstructorService{
 
         return InstructorMapper.maptoInstructoDto(instructor);
     };
-}
+
+    public InstructorDto updateInstructor(int instructorId, InstructorDto instructorDto){
+        InstructorIdentity instructor = instructorRepository.findById(instructorId).orElseThrow(() -> new ResourceNotFoundException("The instructor attributed to this id hasn't been found: " + instructorId) );
+        instructor.setFirst_name(instructorDto.getFirst_name());
+        instructor.setLast_name(instructorDto.getLast_name());
+        instructor.setPhone_number(instructorDto.getPhone_number());
+        instructor.setInstructor_id(instructorDto.getInstructor_id());
+        instructor.setSchedule_id(instructorDto.getSchedule_id());
+        instructor.setSeason_id(instructorDto.getSeason_id());
+        instructor.setSpecialization(instructorDto.getSpecialization_name());
+        instructor.setCity(instructorDto.getCity());
+        instructor.setPassword(instructorDto.getPassword());
+
+        InstructorIdentity updatedInstructor = instructorRepository.save(instructor);
+        return InstructorMapper.maptoInstructoDto(updatedInstructor);
+    }
+    
+    public void deleteInstructor(int instructorId){
+        instructorRepository.findById(instructorId).orElseThrow(() -> new ResourceNotFoundException("The instructor attributed to this id hasn't been found: " + instructorId) );
+        
+
+        instructorRepository.deleteById(instructorId);
+        }
+
+    public List<InstructorDto> getAllInstructors(){
+        List<InstructorIdentity> instructors = instructorRepository.findAll();
+        return instructors.stream().map((instructor) -> InstructorMapper.maptoInstructoDto(instructor)).collect(Collectors.toList());
+    };
+        }
 

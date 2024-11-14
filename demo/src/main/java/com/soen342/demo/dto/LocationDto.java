@@ -7,17 +7,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-
-public class InstructorDto {
-    private int instructor_id;
-    private String phone_number;
-    private String first_name;
-    private String last_name;
+@NoArgsConstructor
+public class LocationDto {
+    private int location_id;
+    private String address;
     private String city;
-    private String specialization_name;
+    private String location_name;
     private int schedule_id;
     private int season_id;
-    private String password;
 }
