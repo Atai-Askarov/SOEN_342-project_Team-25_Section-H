@@ -15,4 +15,5 @@ public class ScheduleDto {
     private int season_id;
     private LocalTime opening_hours;
     private LocalTime closing_hours;
-}
+    private int owner_id;
+;}
