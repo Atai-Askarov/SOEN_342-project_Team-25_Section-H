@@ -24,5 +24,6 @@ public class ScheduleIdentity {
     @Column(name = "season_id") private int season_id;
     @Column(name = "opening_hours") private LocalTime opening_hours;
     @Column(name = "closing_hours") private LocalTime closing_hours;
+    @Column(name = "owner_id") private int owner_id;
 
 }
