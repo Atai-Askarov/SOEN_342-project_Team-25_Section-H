@@ -1,12 +1,15 @@
 package com.soen342.demo.ServiceInterfaces;
 
-import org.springframework.stereotype.Service;
 import com.soen342.demo.IdentityClasses.LessonIdentity;
 import com.soen342.demo.MapperClasses.LessonMapper;
 import com.soen342.demo.RepositoryClasses.LessonRepository;
 import com.soen342.demo.dto.LessonDto;
 import com.soen342.demo.exception.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -26,5 +29,21 @@ public class LessonServiceImpl implements LessonService {
         LessonIdentity lesson = lessonRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Lesson not found with the given ID"));
         return LessonMapper.mapToLessonDto(lesson);
+    }
+
+    @Override
+    public List<LessonDto> getAllLessons() {
+        return lessonRepository.findAll()
+                .stream()
+                .map(LessonMapper::mapToLessonDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteLessonById(int id) {
+        if (!lessonRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Lesson not found with the given ID");
+        }
+        lessonRepository.deleteById(id);
     }
 }

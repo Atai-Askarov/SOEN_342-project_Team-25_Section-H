@@ -7,9 +7,11 @@ import com.soen342.demo.DateTime.TimeSlot.InnaccurateTimePlacement;
 import com.soen342.demo.Location.Location;
 import com.soen342.demo.ServiceInterfaces.*;
 import com.soen342.demo.dto.*;
+import com.soen342.demo.exception.ResourceNotFoundException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -34,8 +36,8 @@ public class Admin {
         this.locationService = locationService;
     }
 
-    public void createLesson() {
-        Scanner scanner = new Scanner(System.in);
+    public void createLesson(Scanner scanner) {
+        
         System.out.println("\n--- Creating a New Lesson ---");
 
         System.out.print("Enter lesson name: ");
@@ -86,13 +88,11 @@ public class Admin {
         String city = scanner.nextLine();
 
         try {
-            // Creating objects from the input data
             TimeSlot timeSlot = new TimeSlot(startTime, endTime, activity);
             Season season = new Season(seasonStartDate, seasonEndDate, Season.mapDigitToDay(weekday), timeSlot);
             Schedule schedule = new Schedule(season, openHours, closeHours);
             Location location = new Location(locationName, schedule, address, city);
 
-            // Call createLesson to save the lesson
             createLessonToDB(timeSlot, location, season, schedule, mode, status, capacity, weekday, lessonName);
 
         } catch (InnaccurateTimePlacement e) {
@@ -154,7 +154,7 @@ public class Admin {
         // Call the LessonService to create the lesson in the database
         LessonDto savedLesson = lessonService.createLesson(lessonDto);
 
-        // Print the saved lesson's details
+        // Print the saved lesosns details
         System.out.println("Lesson saved successfully: ");
         System.out.println("Lesson ID: " + savedLesson.getLessonId());
         System.out.println("Location ID: " + savedLesson.getLocationId());
@@ -163,5 +163,37 @@ public class Admin {
         System.out.println("Status: " + savedLesson.getStatus());
         System.out.println("Capacity: " + savedLesson.getCapacity());
         System.out.println("Lesson Name: " + savedLesson.getLessonName());
+    }
+
+    public void viewLessons() {
+        List<LessonDto> lessons = lessonService.getAllLessons();
+        if (lessons.isEmpty()) {
+            System.out.println("No lessons found.");
+        } else {
+            System.out.println("\n--- Lessons ---");
+            for (LessonDto lesson : lessons) {
+                System.out.println("Lesson ID: " + lesson.getLessonId());
+                System.out.println("Lesson Name: " + lesson.getLessonName());
+                System.out.println("Mode: " + lesson.getMode());
+                System.out.println("Status: " + lesson.getStatus());
+                System.out.println("Capacity: " + lesson.getCapacity());
+                System.out.println("Location ID: " + lesson.getLocationId());
+                System.out.println("Timeslot ID: " + lesson.getTimeslotId());
+                System.out.println("-".repeat(30));
+            }
+        }
+    }
+
+    public void deleteLesson(Scanner scanner) {
+        System.out.print("Enter the ID of the lesson to delete: ");
+        int lessonId = scanner.nextInt();
+        scanner.nextLine();
+
+        try {
+            lessonService.deleteLessonById(lessonId);
+            System.out.println("Lesson with ID " + lessonId + " has been successfully deleted.");
+        } catch (ResourceNotFoundException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 }
