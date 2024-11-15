@@ -2,10 +2,22 @@ package com.soen342.demo.Console;
 
 import java.util.Scanner;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ApplicationContext;
+
+import com.soen342.demo.backendApplication;
+import com.soen342.demo.Admin.Admin;
+
 public class Console {
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
+        // Initialize Spring Boot application context
+        ApplicationContext context = SpringApplication.run(backendApplication.class, args);
+
+        // Get the Admin bean from the Spring context
+        Admin admin = context.getBean(Admin.class);
+
         System.out.println("=".repeat(40));
         System.out.println("      Welcome to the LessonBooker     ");
         System.out.println("=".repeat(40));
@@ -24,7 +36,7 @@ public class Console {
             scanner.nextLine();
 
             switch (choice) {
-                case 1 -> AdminConsole.adminMenu(scanner);
+                case 1 -> AdminConsole.adminMenu(scanner, admin);
                 case 2 -> InstructorConsole.instructorMenu(scanner);
                 case 3 -> ClientConsole.clientMenu(scanner);
                 case 0 -> {

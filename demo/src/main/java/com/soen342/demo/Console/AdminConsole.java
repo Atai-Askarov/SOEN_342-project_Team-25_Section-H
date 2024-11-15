@@ -1,14 +1,17 @@
 package com.soen342.demo.Console;
 
+import com.soen342.demo.Admin.Admin;
+
 import java.util.Scanner;
 
 public class AdminConsole {
 
-    public static void adminMenu(Scanner scanner) {
+    public static void adminMenu(Scanner scanner, Admin admin) {
         while (true) {
             System.out.println("\n\n" + "-".repeat(40));
             System.out.println("Admin Menu:");
             System.out.println("1. Log In");
+            System.out.println("2. Create Lesson");
             System.out.println("0. Return to Main Menu");
             System.out.println("-".repeat(40));
             System.out.print("Choose an option: ");
@@ -17,6 +20,7 @@ public class AdminConsole {
 
             switch (choice) {
                 case 1 -> login(scanner);
+                case 2 -> admin.createLesson();
                 case 0 -> {
                     return;
                 }
