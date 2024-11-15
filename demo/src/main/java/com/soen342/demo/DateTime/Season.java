@@ -9,12 +9,15 @@ import java.time.LocalTime;
 import com.soen342.demo.DateTime.TimeSlot;
 import com.soen342.demo.DateTime.TimeSlot.InnaccurateTimePlacement;
 
+import lombok.Getter;
+import lombok.Setter;
+@Getter
+@Setter
 public class Season {
     private LocalDate startDate;
     private LocalDate endDate;
     List<List<TimeSlot>> daysWeek = new ArrayList<>(7);
-    HashMap<String, List<TimeSlot>> map = new HashMap<>();
-
+    TimeSlot timeslot;
 
     public Season(){
         for (int i = 0; i < 7; i ++){
@@ -54,7 +57,6 @@ public class Season {
                 LocalDate this_endDate = this_interval[1];
                 LocalDate other_startDate = other[0];
                 LocalDate other_endDate = other[1];
-                System.out.println("The interval is within range");
                 return (other_startDate.isEqual(this_startDate) || other_startDate.isAfter(this_startDate)) &&
                 (other_endDate.isEqual(this_endDate) || other_endDate.isBefore(this_endDate));
             }
@@ -124,32 +126,34 @@ public class Season {
         }
         return digit;}
 
-    public void setTimeSlot(TimeSlot thisTimeSlot, String dayWeek){
-        int day_position = mapDayToDigit(dayWeek);
-        List<TimeSlot> dayTimeslots = daysWeek.get(day_position);
-        if(dayTimeslots.size() == 0){
-            dayTimeslots.add(thisTimeSlot);
-        }
+public Boolean setTimeSlot(TimeSlot thisTimeSlot, String dayWeek) {
+    int day_position = mapDayToDigit(dayWeek);
+    List<TimeSlot> dayTimeslots = daysWeek.get(day_position);
 
-        for (int i = 0; i < dayTimeslots.size(); i++){
-            TimeSlot otherTimeSlot = dayTimeslots.get(i);
-            if (thisTimeSlot.isWithinTimeSlot(otherTimeSlot)){
-                int position_indicator = thisTimeSlot.compareTo(otherTimeSlot);
-                if(position_indicator == -1) // add before the other timeslot
-                    if (i == 0){
-                        dayTimeslots.add(0, thisTimeSlot);
-                        break;
-                    }
-                    else{
-                        dayTimeslots.add(i-1, thisTimeSlot);
-                        break;}
-                else if(position_indicator == 1){ // add after the other timeslot
-                    dayTimeslots.add(i + 1,thisTimeSlot);
-                    break;}
-                if (position_indicator == 0) // an overlap exists, so can't add this timeSlot
-                    System.out.println("Overlap, so naynay. Most likely smth is wrong, there is another check for that");
-            }
-    }}
+    // If the list is empty, add the TimeSlot and return true
+    if (dayTimeslots.size() == 0) {
+        dayTimeslots.add(thisTimeSlot);
+        return true;
+    }
+
+    // Iterate over existing TimeSlots to find the correct position
+    for (int i = 0; i < dayTimeslots.size(); i++) {
+        TimeSlot otherTimeSlot = dayTimeslots.get(i);
+        if (thisTimeSlot.isWithinTimeSlot(otherTimeSlot)) {
+            System.out.println("Overlap, so naynay. Most likely smth is wrong, there is another check for that");
+            return false; // An overlap exists, so can't add this timeSlot
+        }
+        if (thisTimeSlot.compareTo(otherTimeSlot) < 0) {
+            dayTimeslots.add(i, thisTimeSlot); // Add before the other timeslot
+            return true;
+        }
+    }
+
+
+    // If no suitable position was found, add the time slot at the end
+    dayTimeslots.add(thisTimeSlot);
+    return true;
+}
 
     public LocalDate getStartDate() {
         return startDate;
