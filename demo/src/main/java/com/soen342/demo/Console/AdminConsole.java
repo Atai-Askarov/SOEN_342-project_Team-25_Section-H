@@ -49,6 +49,10 @@ public class AdminConsole {
             System.out.println("1. Create Lesson");
             System.out.println("2. View Lessons");
             System.out.println("3. Delete Lesson");
+            System.out.println("4. View Client Accounts");
+            System.out.println("5. Delete Client Account");
+            System.out.println("6. View Instructors");
+            System.out.println("7. Delete Instructor Account");
             System.out.println("0. Logout");
 
             int choice = scanner.nextInt();
@@ -58,6 +62,10 @@ public class AdminConsole {
                 case 1 -> admin.createLesson(scanner);
                 case 2 -> admin.viewLessons();
                 case 3 -> admin.deleteLesson(scanner);
+                case 4 -> admin.viewClients();
+                case 5 -> admin.deleteClientById(scanner);
+                case 6 -> admin.viewInstructors();
+                case 7 -> admin.deleteInstructorById(scanner);
                 case 0 -> {
                     System.out.println("\nLogging out...");
                     return;

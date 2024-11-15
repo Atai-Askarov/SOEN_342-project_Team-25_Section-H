@@ -1,5 +1,8 @@
 package com.soen342.demo.ServiceInterfaces;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import com.soen342.demo.IdentityClasses.ClientIdentity;
 import com.soen342.demo.MapperClasses.ClientMapper;
@@ -47,5 +50,12 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public void deleteClient(int id) {
         clientRepository.deleteById(id);
+    }
+    
+    @Override
+    public List<ClientDto> getAllClients() {
+        return clientRepository.findAll().stream()
+                .map(ClientMapper::mapToClientDto)
+                .collect(Collectors.toList());
     }
 }

@@ -17,7 +17,7 @@ public class ClientConsole {
             int choice = scanner.nextInt();
             scanner.nextLine();
             switch (choice) {
-                case 1 -> login(scanner, "client");
+                case 1 -> login(scanner, client);
                 case 2 -> System.out.println("view offerings");
                 case 3 -> registerClient(scanner, client);
                 case 0 -> {
@@ -28,8 +28,15 @@ public class ClientConsole {
         }
     }
 
-    private static void login(Scanner scanner, String role) {
-        System.out.println("Client login logic");
+    private static void login(Scanner scanner, Client client) {
+        System.out.print("Enter phone number: ");
+        String phoneNumber = scanner.nextLine();
+
+        System.out.print("Enter password: ");
+        String password = scanner.nextLine();
+
+        client.login(phoneNumber, password);
+        
         clientActions(scanner);
     }
 

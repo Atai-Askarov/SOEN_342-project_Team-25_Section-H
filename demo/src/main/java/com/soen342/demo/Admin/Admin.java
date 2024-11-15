@@ -26,14 +26,18 @@ public class Admin {
     private final ScheduleService scheduleService;
     private final SeasonService seasonService;
     private final LocationService locationService;
+    private final ClientService clientService;
+    private final InstructorService instructorService;
 
     @Autowired
-    public Admin(LessonService lessonService, TimeSlotService timeSlotService, ScheduleService scheduleService, SeasonService seasonService, LocationService locationService) {
+    public Admin(LessonService lessonService, InstructorService instructorService, TimeSlotService timeSlotService, ClientService clientService, ScheduleService scheduleService, SeasonService seasonService, LocationService locationService) {
         this.lessonService = lessonService;
         this.timeSlotService = timeSlotService;
         this.scheduleService = scheduleService;
         this.seasonService = seasonService;
         this.locationService = locationService;
+        this.clientService = clientService;
+        this.instructorService = instructorService;
     }
 
     public void createLesson(Scanner scanner) {
@@ -196,4 +200,72 @@ public class Admin {
             System.out.println("Error: " + e.getMessage());
         }
     }
-}
+
+    public void viewClients() {
+        List<ClientDto> clients = clientService.getAllClients();
+    
+        if (clients.isEmpty()) {
+            System.out.println("No clients available.");
+        } else {
+            System.out.println("\n--- Clients ---");
+            for (ClientDto client : clients) {
+                System.out.println("Client ID: " + client.getClient_id());
+                System.out.println("First Name: " + client.getFirstName());
+                System.out.println("Last Name: " + client.getLastName());
+                System.out.println("Age: " + client.getAge());
+                System.out.println("Phone Number: " + client.getPhoneNumber());
+                System.out.println("Guardian Phone Number: " + client.getGuardianPhoneNumber());
+                System.out.println("-".repeat(30));
+            }
+        }
+    }
+    
+
+        public void deleteClientById(Scanner scanner) {
+            System.out.print("Enter client ID to delete: ");
+            int clientId = scanner.nextInt();
+            scanner.nextLine();
+    
+            try {
+                clientService.deleteClient(clientId);
+                System.out.println("Client with ID " + clientId + " has been deleted successfully.");
+            } catch (Exception e) {
+                System.out.println("Error: Unable to delete client. " + e.getMessage());
+            }
+        }
+
+        public void viewInstructors() {
+            List<InstructorDto> instructors = instructorService.getAllInstructors();
+        
+            if (instructors.isEmpty()) {
+                System.out.println("No instructors available.");
+            } else {
+                System.out.println("\n--- Instructors ---");
+                for (InstructorDto instructor : instructors) {
+                    System.out.println("Instructor ID: " + instructor.getInstructor_id());
+                    System.out.println("First Name: " + instructor.getFirst_name());
+                    System.out.println("Last Name: " + instructor.getLast_name());
+                    System.out.println("Phone Number: " + instructor.getPhone_number());
+                    System.out.println("City: " + instructor.getCity());
+                    System.out.println("Specialization: " + instructor.getSpecialization_name());
+                    System.out.println("Schedule ID: " + instructor.getSchedule_id());
+                    System.out.println("Season ID: " + instructor.getSeason_id());
+                    System.out.println("-".repeat(30));
+                }
+            }
+        }
+
+        public void deleteInstructorById(Scanner scanner) {
+            System.out.print("Enter instructor ID to delete: ");
+            int instructorId = scanner.nextInt();
+            scanner.nextLine();
+        
+            try {
+                instructorService.deleteInstructor(instructorId);
+                System.out.println("Instructor with ID " + instructorId + " has been successfully deleted.");
+            } catch (Exception e) {
+                System.out.println("Error: Unable to delete instructor. " + e.getMessage());
+            }
+        }
+
+    }

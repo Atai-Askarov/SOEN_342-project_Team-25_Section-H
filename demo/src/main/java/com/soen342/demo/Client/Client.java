@@ -1,5 +1,7 @@
 package com.soen342.demo.Client;
 
+import com.soen342.demo.IdentityClasses.ClientIdentity;
+import com.soen342.demo.RepositoryClasses.ClientRepository;
 import com.soen342.demo.ServiceInterfaces.ClientService;
 import com.soen342.demo.dto.ClientDto;
 
@@ -25,15 +27,17 @@ public class Client {
     private String guardianPhoneNumber;
 
     private final ClientService clientService;
+    private final ClientRepository clientRepository;
 
     @Autowired
-    public Client(ClientService clientService) {
+    public Client(ClientService clientService, ClientRepository clientRepository) {
         this.clientService = clientService;
+        this.clientRepository = clientRepository;
     }
 
-
-    public Client(){
+    public Client() {
         this.clientService = null;
+        this.clientRepository = null;
     }
 
     // Constructor if client is over age, no need for guardian phone number
@@ -45,6 +49,7 @@ public class Client {
         this.password = password;
         this.guardianPhoneNumber = null;
         this.clientService = null;
+        this.clientRepository = null;
 
     }
     // Constructor if client is under age need for guardian phone number
@@ -57,6 +62,8 @@ public class Client {
         this.password = password;
         this.guardianPhoneNumber = guardianPhoneNumber;
         this.clientService = null;
+        this.clientRepository = null;
+
     }
     public int getAge() {
         return age;
@@ -125,6 +132,17 @@ public class Client {
         clientDto.setGuardianPhoneNumber(guardianPhoneNumber);
 
         clientService.createClient(clientDto);
+    }
+
+    public boolean login(String phoneNumber, String password) {
+        ClientIdentity client = clientRepository.findByPhoneNumber(phoneNumber);
+        if (client != null && client.getPassword().equals(password)) {
+            System.out.println("Login successful for client: " + client.getFirstName() + " " + client.getLastName());
+            return true;
+        } else {
+            System.out.println("Login failed. Incorrect phone number or password.");
+            return false;
+        }
     }
 
     public static void main(String[] args) {
