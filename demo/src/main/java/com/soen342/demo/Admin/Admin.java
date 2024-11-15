@@ -101,12 +101,10 @@ public class Admin {
     }
 
     public void createLessonToDB(TimeSlot timeSlot, Location location, Season season, Schedule schedule, String mode, String status, int capacity, int weekday, String lessonName) {
-        long timestamp = System.currentTimeMillis();
-        int randomNum = (int) (Math.random() * 1000) + (int)timestamp;
-        
+
         //Create time slot item of lesson
         TimeSlotDto timeSlotDto = new TimeSlotDto();
-        timeSlotDto.setTimeslot_id(randomNum);
+        timeSlotDto.setTimeslot_id((int) (Math.random() * 10000));
         timeSlotDto.setActivity(timeSlot.getActivity());
         timeSlotDto.setStart_time(timeSlot.getStart());
         timeSlotDto.setEnd_time(timeSlot.getEnd());
@@ -116,7 +114,7 @@ public class Admin {
 
         //Create season aspect
         SeasonDto seasonDto = new SeasonDto();
-        seasonDto.setSeason_id(randomNum);
+        seasonDto.setSeason_id((int) (Math.random() * 10000));
         seasonDto.setStart_date(season.getStartDate());
         seasonDto.setEnd_date(season.getEndDate());
         seasonDto.setTimeslot_id(savedTimeSlot.getTimeslot_id());
@@ -125,7 +123,7 @@ public class Admin {
 
         // create schedule aspect
         ScheduleDto scheduleDto = new ScheduleDto();
-        scheduleDto.setSchedule_id(randomNum);
+        scheduleDto.setSchedule_id((int) (Math.random() * 10000));
         scheduleDto.setOpening_hours(schedule.getOpenHours());
         scheduleDto.setClosing_hours(schedule.getCloseHours());
         scheduleDto.setSeason_id(savedSeason.getSeason_id());
@@ -134,7 +132,7 @@ public class Admin {
 
         //create location
         LocationDto locationDto = new LocationDto();
-        locationDto.setLocation_id(randomNum);
+        locationDto.setLocation_id((int) (Math.random() * 10000));
         locationDto.setAddress(location.getAddress());
         locationDto.setCity(location.getCity());
         locationDto.setLocation_name(location.getName());
@@ -145,7 +143,7 @@ public class Admin {
 
         // Create a LessonDto object with sample data
         LessonDto lessonDto = new LessonDto();
-        lessonDto.setLocationId(randomNum);
+        lessonDto.setLocationId((int) (Math.random() * 10000));
         lessonDto.setLocationId(savedLocation.getLocation_id());
         lessonDto.setTimeslotId(savedTimeSlot.getTimeslot_id());
         lessonDto.setMode(mode);
