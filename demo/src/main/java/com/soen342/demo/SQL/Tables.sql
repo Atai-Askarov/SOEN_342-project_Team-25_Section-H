@@ -20,6 +20,8 @@ CREATE TABLE schedule(
 	season_id INT,
 	opening_hours TIME,
 	closing_hours TIME,
+	owner_id INT,
+	FOREIGN KEY(owner_id) REFERENCES instructor(instructor_id),
 	FOREIGN KEY (season_id) REFERENCES season(season_id),
 	PRIMARY KEY(schedule_id, season_id)
 );
