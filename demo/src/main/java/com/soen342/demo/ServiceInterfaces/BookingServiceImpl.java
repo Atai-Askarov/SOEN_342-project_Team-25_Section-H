@@ -8,6 +8,7 @@ import com.soen342.demo.dto.BookingDto;
 import com.soen342.demo.exception.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 
+
 @Service
 @AllArgsConstructor
 public class BookingServiceImpl implements BookingService {
@@ -26,5 +27,20 @@ public class BookingServiceImpl implements BookingService {
         BookingIdentity booking = bookingRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Booking not found with ID: " + id));
         return BookingMapper.mapToBookingDto(booking);
+    }
+
+    public void createBookingDto(int bookingId, int offeringId, int clientId) {
+        BookingDto booking = new BookingDto();
+        booking.setBookingId(bookingId);
+        booking.setOfferingId(offeringId);
+        booking.setClientId(clientId);
+        booking.setAvailability(true);
+        createBooking(booking);
+    }
+
+    public void cancelBooking(int bookingId) {
+        bookingRepository.findById(bookingId)
+            .orElseThrow(() -> new ResourceNotFoundException("Booking not found with ID: " + bookingId));
+        bookingRepository.deleteById(bookingId);
     }
 }
