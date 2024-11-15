@@ -3,131 +3,165 @@ package com.soen342.demo.Instructor;
 import java.util.ArrayList;
 import com.soen342.demo.DateTime.*;
 import com.soen342.demo.Service.*;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.time.LocalTime;
+import com.soen342.demo.ServiceInterfaces.InstructorService;
+import com.soen342.demo.ServiceInterfaces.OfferingService;
+import com.soen342.demo.ServiceInterfaces.ScheduleService;
+import com.soen342.demo.ServiceInterfaces.SeasonService;
+import com.soen342.demo.ServiceInterfaces.TimeSlotService;
+import com.soen342.demo.ServiceInterfaces.LessonService;
+import com.soen342.demo.dto.InstructorDto;
+import com.soen342.demo.dto.LessonDto;
+import com.soen342.demo.dto.OfferingDto;
+import com.soen342.demo.dto.ScheduleDto;
+import com.soen342.demo.dto.SeasonDto;
+import com.soen342.demo.dto.TimeSlotDto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Random;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Component
 public class Instructor {
-    private String name;
-    private int phone_number;
+    private String phone_number;
+    private String first_name;
+    private String last_name;
+    private List<String> city;
     private List<String> specialization; // Changed to ArrayList
     private Schedule availability;
-    private List<String> city;
+    private String password;
 
-    public Instructor(String name, int phone_number, ArrayList<String> specialization, Schedule availability,
-            ArrayList<String> city) {
-        this.name = name;
-        this.phone_number = phone_number;
-        this.specialization = specialization;
-        this.availability = availability;
-        this.city = city;
+    @Autowired
+    final TimeSlotService timeSlotService = null;
+    @Autowired
+    final SeasonService seasonService = null;
+    @Autowired
+    final ScheduleService scheduleService = null;
+    @Autowired
+    final InstructorService instructorService = null;
+    @Autowired
+    final OfferingService offeringService = null;
+    @Autowired
+    final LessonService lessonService = null;
+
+    private static int generateRandomId() {
+        Random random = new Random();
+        return random.nextInt(10000); // Generates a random integer between 0 and 9999
     }
-
-    public Instructor(String name, int phone_number, String specialization, Schedule availability,
-            String city) {
-        this.name = name;
-        this.phone_number = phone_number;
-        this.specialization = new ArrayList<>();
-        this.specialization.add(specialization);
-        this.availability = availability;
-        this.city = new ArrayList<>();
-        this.city.add(city);
+    public void ViewLessons() {
+        List<LessonDto> lessons = lessonService.getAllLessons();
+        for (LessonDto lesson : lessons) {
+            System.out.println(lesson.getLessonName());
+        }
     }
-
-    public void acceptLesson(Lesson lesson){
-        Offering myOffering = new Offering(lesson, this);
-        //check if the offering exists within the database already
-        // add the offering to the database
+    //Select the lesson that the instructor wants to accept
+    // after that the lesson must undergo a series of checks to see if it is valid within the schedule
+    public void acceptLesson(Lesson lesson, int instructor_id, int lesson_id, LocalDate start, LocalDate end, String day) {
+        int OfferingIdGenerated = generateRandomId();
+        OfferingDto offeringDto = new OfferingDto();
         
-    }
-    public void viewAvailableLessons(){
-        //view Lessons
-
-    }
-
-    public void dropOffering(Offering offering){
-        //delete the offering from the database
-        //make the lesson available with the lesson database
-        // if the offering has been booked, can't drop it
-        // otherwise okay
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getPhone_number() {
-        return phone_number;
-    }
-
-    public void setPhone_number(int phone_number) {
-        this.phone_number = phone_number;
-    }
-
-    public List<String> getSpecialization() {
-        return specialization;
-    }
-
-    public void setSpecialization(String specialization) {
-        this.specialization.add(specialization);
-    }
-
-    public Schedule getAvailability() {
-        return availability;
-    }
-
-    public void setAvailability(Schedule availability) {
-        this.availability = availability;
-    }
-
-    public List<String> getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city.add(city);
-    }
-
-    public String toString() {
-        // Building the specialization string
-        StringBuilder specializationString = new StringBuilder();
-        for (int i = 0; i < specialization.size(); i++) {
-            specializationString.append(specialization.get(i));
-            if (i < specialization.size() - 1) {
-                specializationString.append(", "); // Add comma except for the last element
+        for (String city : this.getCity()) {
+            for (String specialization : this.getSpecialization()) {
+                if (lesson.getLocation().getCity().equals(city) && lesson.getTimeSlot().getActivity().equals(specialization)) {
+                    for( int i = 0; i < availability.getSeason().size(); i++){
+                        if (availability.getSeason().get(i).isWithinDateInterval(new LocalDate[]{start, end}));
+                            int capacity = lesson.getCapacity();
+                            if (!lesson.getStatus().equals("available")){
+                                System.out.println("Lesson is not available");
+                            }
+                            else{
+                                if (capacity > 0){
+                                    capacity -= 1;
+                                    Season theOne = availability.getSeason().get(i);
+                                    if(theOne.setTimeSlot(lesson.getTimeSlot(), day)){
+                                        lesson.setCapacity(capacity);
+                                        offeringDto.setInstructorId(instructor_id);
+                                        offeringDto.setLessonId(lesson_id);
+                                        offeringDto.setOfferingId(OfferingIdGenerated);
+                                        offeringService.createOffering(offeringDto);
+                                    }
+                                else{
+                                    System.out.println("Lesson is full");
+                                }
+                        }
+                            
+                        }
+                    }
+                    
+                }
+                else{
+                    System.out.println("Lesson is not accepted");
+                }
             }
         }
-
-        // Building the city string
-        StringBuilder cityString = new StringBuilder();
-        for (int i = 0; i < city.size(); i++) {
-            cityString.append(city.get(i));
-            if (i < city.size() - 1) {
-                cityString.append(", "); // Add comma except for the last element
-            }
-        }
-
-        // Creating the final output
-        return name + ", whose phone number is " + phone_number +
-                ", specializes in " + specializationString.toString() +
-                ", whose availability is as follows: " + availability.toString() +
-                ", and who resides in " + cityString.toString() + ".";
     }
 
-    public static void main(String[] args) {
-        LocalDate start = LocalDate.of(2024, 1, 9);
-        LocalDate end = LocalDate.of(2024, 1, 11);
-        // Schedule one = new Schedule(start, end, "Monday", new LocalTime(5, 30), new
-        // LocalTime(7, 30));
-        // Instructor dima = new Instructor("Dima", 1111111, "plumbing", one,
-        // "Montreal");
-        // System.out.println(dima);
+    public List<InstructorDto> createInstructorDto() {
+        List<InstructorDto> instructorDtos = new ArrayList<>();
+        Schedule schedule = this.getAvailability();
+        List<Season> seasons = schedule.getSeason();
+        
+        for (Season season : seasons) {
+            int seasonIdGenerated = generateRandomId();
+    
+            List<List<TimeSlot>> timeslots = season.getDaysWeek();
+            for (int day_index = 0; day_index < timeslots.size(); day_index++) {
+                List<TimeSlot> day = timeslots.get(day_index);
+                for (TimeSlot timeSlot : day) {
+                    int timeslotIdGenerated = generateRandomId();
+                    for (String city : this.getCity()) {
+                        for (String specialization : this.getSpecialization()) {
+    
+                            TimeSlotDto timeSlotDto = new TimeSlotDto();
+                            timeSlotDto.setTimeslot_id(timeslotIdGenerated);
+                            timeSlotDto.setWeekday(day_index);
+                            timeSlotDto.setStart_time(timeSlot.getStart());
+                            timeSlotDto.setEnd_time(timeSlot.getEnd());
+                            timeSlotDto.setActivity(timeSlot.getActivity());
+                            timeSlotService.createTimeSlot(timeSlotDto);
+    
+                            SeasonDto seasonDto = new SeasonDto();
+                            seasonDto.setSeason_id(seasonIdGenerated);
+                            seasonDto.setStart_date(season.getStartDate());
+                            seasonDto.setEnd_date(season.getEndDate());
+                            seasonDto.setTimeslot_id(timeSlotDto.getTimeslot_id());
+                            seasonService.createSeason(seasonDto);
+    
+                            ScheduleDto scheduleDto = new ScheduleDto();
+                            scheduleDto.setSchedule_id(generateRandomId());
+                            scheduleDto.setSeason_id(seasonDto.getSeason_id());
+                            scheduleDto.setOwner_id(generateRandomId());
+                            scheduleService.createSchedule(scheduleDto);
+    
+                            InstructorDto instructorDto = new InstructorDto();
+                            instructorDto.setInstructor_id(scheduleDto.getOwner_id());
+                            instructorDto.setFirst_name(this.getFirst_name());
+                            instructorDto.setLast_name(this.getLast_name());
+                            instructorDto.setPhone_number(this.getPhone_number());
+                            instructorDto.setCity(city);
+                            instructorDto.setSpecialization_name(specialization);
+                            instructorDto.setPassword(this.getPassword());
+                            instructorDto.setSchedule_id(scheduleDto.getSchedule_id());
+                            instructorDto.setSeason_id(seasonDto.getSeason_id());
+                            instructorService.createInstructor(instructorDto);
+                            instructorDtos.add(instructorDto);
+                        }
+                    }
+                }
+            }
+        }
+    
+        return instructorDtos;
     }
 }
