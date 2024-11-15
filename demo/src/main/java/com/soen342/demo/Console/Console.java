@@ -7,6 +7,7 @@ import org.springframework.context.ApplicationContext;
 
 import com.soen342.demo.backendApplication;
 import com.soen342.demo.Admin.Admin;
+import com.soen342.demo.Client.Client;
 
 public class Console {
     private static final Scanner scanner = new Scanner(System.in);
@@ -17,6 +18,7 @@ public class Console {
 
         // Get the Admin bean from the Spring context
         Admin admin = context.getBean(Admin.class);
+        Client client = context.getBean(Client.class);
 
         System.out.println("=".repeat(40));
         System.out.println("      Welcome to the LessonBooker     ");
@@ -38,7 +40,7 @@ public class Console {
             switch (choice) {
                 case 1 -> AdminConsole.adminMenu(scanner, admin);
                 case 2 -> InstructorConsole.instructorMenu(scanner);
-                case 3 -> ClientConsole.clientMenu(scanner);
+                case 3 -> ClientConsole.clientMenu(scanner, client);
                 case 0 -> {
                     System.out.println("\nThank you for using the LessonBooker. Goodbye!");
                     System.exit(0);

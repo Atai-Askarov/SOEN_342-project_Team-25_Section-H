@@ -32,9 +32,9 @@ public class ClientIdentity {
     @Column(name = "phone_number") 
     private String phoneNumber;
 
-    @Column(name = "guardian_phone_number") 
-    private String guardianPhoneNumber;
-
     @Column(name = "password_") 
     private String password;
+
+    @Column(name = "guardian_phone_number") 
+    private String guardianPhoneNumber;
 }
