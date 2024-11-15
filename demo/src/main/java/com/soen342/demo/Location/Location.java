@@ -12,15 +12,17 @@ public class Location {
     private String city;
     private List<Lesson> lessons = new ArrayList<Lesson>();
 
-    public Location(String name, Schedule schedule, String address) {
+    public Location(String name, Schedule schedule, String address, String city) {
         this.name = name;
         this.schedule = schedule;
         this.address = address;
+        this.city = city;
     }
-    public Location(String name, Schedule schedule, String address, List<Lesson> lessons) {
+    public Location(String name, Schedule schedule, String address, String city, List<Lesson> lessons) {
         this.name = name;
         this.schedule = schedule;
         this.address = address;
+        this.city = city;
         this.lessons = lessons;
     }
     public Location(String name, String address) {

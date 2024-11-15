@@ -65,7 +65,7 @@ public class Season {
         return false;
     }
 
-    static String mapDigitToDay(int digit) {
+    public static String mapDigitToDay(int digit) {
         String day;
         switch (digit) {
             case 0:
@@ -151,7 +151,7 @@ public class Season {
             }
     }}
 
-    private LocalDate getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
@@ -159,7 +159,7 @@ public class Season {
         this.startDate = startDate;
     }
 
-    private LocalDate getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
