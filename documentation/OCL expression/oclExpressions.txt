@@ -1,0 +1,27 @@
+context Instructor::ViewLessons() : Set(Lesson)
+post: result = Lesson.allInstances()->select(lesson | lesson.offering->exists(o | o.instructor = self))
+
+context Instructor::AcceptLesson(l: Lesson) : Boolean
+pre: Lesson.allInstances()->includes(l)
+post: l.status = 'Accepted' and result = true
+
+context Admin::CreateLesson(location: Location, timeslot: TimeSlot, mode: String, capacity: Integer, lessonName: String) : Lesson
+post: Lesson.allInstances()->exists(l |
+    l.location = location and
+    l.timeslot = timeslot and
+    l.mode = mode and
+    l.capacity = capacity and
+    l.lessonName = lessonName)
+
+
+context Client::makeBooking(offering: Offering) : Booking
+pre: Offering.allInstances()->includes(offering) and offering.capacity > Booking.allInstances()->select(b | b.offering = offering)->size()
+post: Booking.allInstances()->exists(b |
+    b.client = self and
+    b.offering = offering and
+    b.availability = true)
+
+
+context Client::cancelBooking(booking: Booking) : Boolean
+pre: Booking.allInstances()->includes(booking) and booking.client = self
+post: Booking.allInstances()->excludes(booking) and result = true

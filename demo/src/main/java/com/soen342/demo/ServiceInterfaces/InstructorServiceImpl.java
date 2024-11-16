@@ -62,5 +62,14 @@ public class InstructorServiceImpl implements InstructorService{
         List<InstructorIdentity> instructors = instructorRepository.findAll();
         return instructors.stream().map((instructor) -> InstructorMapper.maptoInstructoDto(instructor)).collect(Collectors.toList());
     };
+
+    public InstructorDto getInstructorbyPhoneNumber(String phoneNumber) throws ResourceNotFoundException {
+        InstructorIdentity instructor = instructorRepository.findByPhoneNumber(phoneNumber)
+            .orElseThrow(() -> new ResourceNotFoundException("Instructor does not exist with the given phone number"));
+    
+        return InstructorMapper.maptoInstructoDto(instructor);
+    }
+    
+    
         }
 
