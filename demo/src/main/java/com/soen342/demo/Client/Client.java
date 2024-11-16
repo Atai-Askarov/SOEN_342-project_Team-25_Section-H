@@ -237,6 +237,18 @@ public class Client {
         }
     }
 
+    public void cancelBooking(Scanner scanner) {
+        try {
+            System.out.print("Please enter the booking ID you want to cancel: ");
+            int bookingId = scanner.nextInt();
+
+            bookingService.cancelBooking(bookingId);
+            System.out.println("Booking with ID " + bookingId + " has been successfully cancelled.");
+        } catch (Exception e) {
+            System.err.println("Error cancelling booking: " + e.getMessage());
+        }
+    }
+
     public static void main(String[] args) {
         Client tester = new Client(40, "testing", "tester", "5141234567", "40000000", "1234567");
         System.out.println(tester.toString());

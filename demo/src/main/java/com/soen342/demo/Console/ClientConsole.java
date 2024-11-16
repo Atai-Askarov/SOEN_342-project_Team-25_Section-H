@@ -90,8 +90,8 @@ public class ClientConsole {
             switch (choice) {
                 case 1 -> client.viewAllOfferings();
                 case 2 -> client.acceptOffering(scanner, currentClientId);
-                case 3 -> System.out.println("Viewing Bookings");
-                case 4 -> System.out.println("Accepting Booking");
+                case 3 -> client.viewOwnBookings(currentClientId);
+                case 4 -> client.cancelBooking(scanner);
                 case 0 -> {
                     System.out.println("Logging out...");
                     return;
