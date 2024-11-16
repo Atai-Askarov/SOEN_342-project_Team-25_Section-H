@@ -1,5 +1,7 @@
 package com.soen342.demo.ServiceInterfaces;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import com.soen342.demo.IdentityClasses.OfferingIdentity;
 import com.soen342.demo.MapperClasses.OfferingMapper;
@@ -26,5 +28,13 @@ public class OfferingServiceImpl implements OfferingService {
         OfferingIdentity offering = offeringRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Offering not found with ID: " + id));
         return OfferingMapper.mapToOfferingDto(offering);
+    }
+
+    @Override
+    public List<OfferingDto> getAllOfferings() {
+        return offeringRepository.findAll()
+                .stream()
+                .map(OfferingMapper::mapToOfferingDto)
+                .toList();
     }
 }

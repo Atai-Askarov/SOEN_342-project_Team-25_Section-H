@@ -1,5 +1,8 @@
 package com.soen342.demo.ServiceInterfaces;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import com.soen342.demo.IdentityClasses.BookingIdentity;
 import com.soen342.demo.MapperClasses.BookingMapper;
@@ -42,5 +45,14 @@ public class BookingServiceImpl implements BookingService {
         bookingRepository.findById(bookingId)
             .orElseThrow(() -> new ResourceNotFoundException("Booking not found with ID: " + bookingId));
         bookingRepository.deleteById(bookingId);
+    }
+
+      @Override
+    public List<BookingDto> getBookingsByClientId(int clientId) {
+        // Query the database for all bookings with the given clientId
+        List<BookingIdentity> bookings = bookingRepository.findByClientId(clientId);
+        return bookings.stream()
+            .map(BookingMapper::mapToBookingDto)
+            .collect(Collectors.toList());
     }
 }

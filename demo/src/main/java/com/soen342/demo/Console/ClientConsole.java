@@ -5,6 +5,7 @@ import java.util.Scanner;
 import com.soen342.demo.Client.Client;
 
 public class ClientConsole {
+    public static int currentClientId;
 
     public static void clientMenu(Scanner scanner, Client client) {
         while (true) {
@@ -18,7 +19,7 @@ public class ClientConsole {
             scanner.nextLine();
             switch (choice) {
                 case 1 -> login(scanner, client);
-                case 2 -> System.out.println("view offerings");
+                case 2 -> client.viewAllOfferings();
                 case 3 -> registerClient(scanner, client);
                 case 0 -> {
                     return;
@@ -35,32 +36,31 @@ public class ClientConsole {
         System.out.print("Enter password: ");
         String password = scanner.nextLine();
 
-        client.login(phoneNumber, password);
-        
-        clientActions(scanner);
+        if (client.login(phoneNumber, password)) {
+            clientActions(scanner, client);
+        }
     }
 
     private static void registerClient(Scanner scanner, Client client) {
         System.out.println("\nRegister as Client");
-    
+
         System.out.print("Enter First Name: ");
         String firstName = scanner.nextLine();
-    
+
         System.out.print("Enter Last Name: ");
         String lastName = scanner.nextLine();
-    
+
         System.out.print("Enter Phone Number: ");
         String phoneNumber = scanner.nextLine();
-    
+
         System.out.print("Enter Password: ");
         String password = scanner.nextLine();
-    
+
         System.out.print("Enter Age: ");
         int age = scanner.nextInt();
         scanner.nextLine();
-        
-        if(age < 18)
-        {
+
+        if (age < 18) {
             System.out.println("Client is underage please go through a parent guardian account to use the system.");
             return;
         }
@@ -76,7 +76,7 @@ public class ClientConsole {
         }
     }
 
-    private static void clientActions(Scanner scanner) {
+    private static void clientActions(Scanner scanner, Client client) {
         while (true) {
             System.out.println("Client Actions:");
             System.out.println("1. View Offerings");
@@ -88,8 +88,8 @@ public class ClientConsole {
             int choice = scanner.nextInt();
             scanner.nextLine();
             switch (choice) {
-                case 1 -> System.out.println("Viewing Offerings");
-                case 2 -> System.out.println("Accepting Offering");
+                case 1 -> client.viewAllOfferings();
+                case 2 -> client.acceptOffering(scanner, currentClientId);
                 case 3 -> System.out.println("Viewing Bookings");
                 case 4 -> System.out.println("Accepting Booking");
                 case 0 -> {

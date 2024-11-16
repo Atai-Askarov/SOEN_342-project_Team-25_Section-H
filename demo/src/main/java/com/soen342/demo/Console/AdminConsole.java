@@ -37,8 +37,7 @@ public class AdminConsole {
         if ("admin".equals(username) && "admin".equals(password)) {
             System.out.println("Login successful!");
             adminActions(scanner, admin);
-        }
-        else{
+        } else {
             System.out.println("Invalid credentials. Please try again.");
         }
     }
@@ -49,10 +48,10 @@ public class AdminConsole {
             System.out.println("1. Create Lesson");
             System.out.println("2. View Lessons");
             System.out.println("3. Delete Lesson");
-            System.out.println("4. View Client Accounts");
-            System.out.println("5. Delete Client Account");
-            System.out.println("6. View Instructors");
-            System.out.println("7. Delete Instructor Account");
+            System.out.println("4. View client accounts");
+            System.out.println("5. Delete client account");
+            System.out.println("6. View Instructor accounts");
+            System.out.println("7. Delete instructor account");
             System.out.println("0. Logout");
 
             int choice = scanner.nextInt();

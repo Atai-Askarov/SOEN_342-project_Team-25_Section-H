@@ -9,7 +9,8 @@ public class ScheduleMapper {
             Schedule.getSchedule_id(),
             Schedule.getSeason_id(),
             Schedule.getOpening_hours(),
-            Schedule.getClosing_hours()
+            Schedule.getClosing_hours(),
+            Schedule.getOwner_id()
         );
 
     }
@@ -19,7 +20,8 @@ public class ScheduleMapper {
             Schedule.getSchedule_id(),
             Schedule.getSeason_id(),
             Schedule.getOpening_hours(),
-            Schedule.getClosing_hours()
+            Schedule.getClosing_hours(),
+            Schedule.getOwner_id()
         );
     }
 }
