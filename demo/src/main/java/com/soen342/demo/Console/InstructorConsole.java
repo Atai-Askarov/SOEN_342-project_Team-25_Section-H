@@ -125,8 +125,8 @@ public class InstructorConsole {
     private static void instructorActions(Scanner scanner, Instructor instructor) {
         while (true) {
             System.out.println("Instructor Actions:");
-            System.out.println("1. View Available Offerings");
-            System.out.println("2. Accept Offerings");
+            System.out.println("1. View Available Lessons");
+            System.out.println("2. Accept Lesson");
             System.out.println("0. Logout");
 
             int choice = scanner.nextInt();

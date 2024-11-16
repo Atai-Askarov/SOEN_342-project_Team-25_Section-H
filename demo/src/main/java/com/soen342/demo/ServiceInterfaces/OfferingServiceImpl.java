@@ -37,4 +37,11 @@ public class OfferingServiceImpl implements OfferingService {
                 .map(OfferingMapper::mapToOfferingDto)
                 .toList();
     }
+
+    @Override
+    public void deleteOffering(int offeringId) {
+        OfferingIdentity offering = offeringRepository.findById(offeringId)
+                .orElseThrow(() -> new ResourceNotFoundException("Offering not found with ID: " + offeringId));
+        offeringRepository.deleteById(offeringId);
+    }
 }

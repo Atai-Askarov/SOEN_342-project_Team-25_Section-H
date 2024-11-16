@@ -28,11 +28,15 @@ public class Admin {
     private final LocationService locationService;
     private final ClientService clientService;
     private final InstructorService instructorService;
-
+    private final BookingService bookingService;
+    private final OfferingService offeringService;
+    
     @Autowired
-    public Admin(LessonService lessonService, InstructorService instructorService, TimeSlotService timeSlotService,
-            ClientService clientService, ScheduleService scheduleService, SeasonService seasonService,
-            LocationService locationService) {
+    public Admin(LessonService lessonService, InstructorService instructorService, 
+                 TimeSlotService timeSlotService, ClientService clientService, 
+                 ScheduleService scheduleService, SeasonService seasonService, 
+                 LocationService locationService, BookingService bookingService, 
+                 OfferingService offeringService) {
         this.lessonService = lessonService;
         this.timeSlotService = timeSlotService;
         this.scheduleService = scheduleService;
@@ -40,6 +44,8 @@ public class Admin {
         this.locationService = locationService;
         this.clientService = clientService;
         this.instructorService = instructorService;
+        this.bookingService = bookingService;
+        this.offeringService = offeringService;
     }
 
     public void createLesson(Scanner scanner) {
@@ -268,5 +274,63 @@ public class Admin {
             System.out.println("Error: Unable to delete instructor. " + e.getMessage());
         }
     }
+
+    public void viewAllBookings() {
+        List<BookingDto> bookings = bookingService.getAllBookings();
+        if (bookings.isEmpty()) {
+            System.out.println("No bookings available.");
+        } else {
+            System.out.println("\n--- Bookings ---");
+            for (BookingDto booking : bookings) {
+                System.out.println("Booking ID: " + booking.getBookingId());
+                System.out.println("Offering ID: " + booking.getOfferingId());
+                System.out.println("Client ID: " + booking.getClientId());
+                System.out.println("Availability: " + (booking.isAvailability() ? "Available" : "Not Available"));
+                System.out.println("-".repeat(30));
+            }
+        }
+    }
+    
+    public void deleteBookingById(Scanner scanner) {
+        System.out.print("Enter the ID of the booking to delete: ");
+        int bookingId = scanner.nextInt();
+        scanner.nextLine();
+    
+        try {
+            bookingService.cancelBooking(bookingId);
+            System.out.println("Booking with ID " + bookingId + " has been successfully deleted.");
+        } catch (Exception e) {
+            System.out.println("Error: Unable to delete booking. " + e.getMessage());
+        }
+    }
+    
+    public void viewAllOfferings() {
+        List<OfferingDto> offerings = offeringService.getAllOfferings();
+        if (offerings.isEmpty()) {
+            System.out.println("No offerings available.");
+        } else {
+            System.out.println("\n--- Offerings ---");
+            for (OfferingDto offering : offerings) {
+                System.out.println("Offering ID: " + offering.getOfferingId());
+                System.out.println("Lesson ID: " + offering.getLessonId());
+                System.out.println("Instructor ID: " + offering.getInstructorId());
+                System.out.println("-".repeat(30));
+            }
+        }
+    }
+    
+    public void deleteOfferingById(Scanner scanner) {
+        System.out.print("Enter the ID of the offering to delete: ");
+        int offeringId = scanner.nextInt();
+        scanner.nextLine();
+    
+        try {
+            offeringService.deleteOffering(offeringId);
+            System.out.println("Offering with ID " + offeringId + " has been successfully deleted.");
+        } catch (Exception e) {
+            System.out.println("Error: Unable to delete offering. " + e.getMessage());
+        }
+    }
+    
 
 }

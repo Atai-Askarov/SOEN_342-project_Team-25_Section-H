@@ -48,15 +48,20 @@ public class AdminConsole {
             System.out.println("1. Create Lesson");
             System.out.println("2. View Lessons");
             System.out.println("3. Delete Lesson");
-            System.out.println("4. View client accounts");
-            System.out.println("5. Delete client account");
-            System.out.println("6. View Instructor accounts");
-            System.out.println("7. Delete instructor account");
+            System.out.println("4. View Client Accounts");
+            System.out.println("5. Delete Client Account");
+            System.out.println("6. View Instructor Accounts");
+            System.out.println("7. Delete Instructor Account");
+            System.out.println("8. View All Bookings");
+            System.out.println("9. Delete Booking");
+            System.out.println("10. View All Offerings");
+            System.out.println("11. Delete Offering");
             System.out.println("0. Logout");
-
+    
+            System.out.print("Choose an option: ");
             int choice = scanner.nextInt();
             scanner.nextLine();
-
+    
             switch (choice) {
                 case 1 -> admin.createLesson(scanner);
                 case 2 -> admin.viewLessons();
@@ -65,6 +70,10 @@ public class AdminConsole {
                 case 5 -> admin.deleteClientById(scanner);
                 case 6 -> admin.viewInstructors();
                 case 7 -> admin.deleteInstructorById(scanner);
+                case 8 -> admin.viewAllBookings();
+                case 9 -> admin.deleteBookingById(scanner);
+                case 10 -> admin.viewAllOfferings();
+                case 11 -> admin.deleteOfferingById(scanner);
                 case 0 -> {
                     System.out.println("\nLogging out...");
                     return;

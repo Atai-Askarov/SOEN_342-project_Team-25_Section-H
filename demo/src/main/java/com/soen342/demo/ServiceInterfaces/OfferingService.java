@@ -8,4 +8,5 @@ public interface OfferingService {
     OfferingDto createOffering(OfferingDto offeringDto);
     OfferingDto getOfferingById(int id);
     List<OfferingDto> getAllOfferings();
+    void deleteOffering(int offeringId);
 }

@@ -201,6 +201,7 @@ public class Instructor {
             offeringDto.setOfferingId(OfferingIdGenerated);
     
             offeringService.createOffering(offeringDto);
+            lessonDto.setStatus("unavailable");
             System.out.println("You have successfully accepted the lesson!");
         } else {
             System.out.println("Lesson is full and cannot be accepted.");
